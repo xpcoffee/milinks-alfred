@@ -9,9 +9,9 @@
 	<key>connections</key>
 	<dict/>
 	<key>createdby</key>
-	<string></string>
+	<string>Emerick Bosch</string>
 	<key>description</key>
-	<string>The links. All mine.</string>
+	<string>All the links. All mine.</string>
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
@@ -24,20 +24,20 @@
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
-				<integer>0</integer>
+				<integer>127</integer>
 				<key>script</key>
 				<string></string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
-				<string>test.js</string>
+				<string></string>
 				<key>type</key>
-				<integer>8</integer>
+				<integer>5</integer>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
-			<string>E03639FD-D486-4B78-808D-366C4DE2B680</string>
+			<string>D6BD2776-468A-451B-ABCF-A274DBCBF3C2</string>
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
@@ -46,12 +46,12 @@
 	<string></string>
 	<key>uidata</key>
 	<dict>
-		<key>E03639FD-D486-4B78-808D-366C4DE2B680</key>
+		<key>D6BD2776-468A-451B-ABCF-A274DBCBF3C2</key>
 		<dict>
 			<key>xpos</key>
-			<real>300</real>
+			<real>645</real>
 			<key>ypos</key>
-			<real>150</real>
+			<real>370</real>
 		</dict>
 	</dict>
 	<key>userconfigurationconfig</key>
