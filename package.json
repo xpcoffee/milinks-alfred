@@ -4,7 +4,9 @@
   "description": "An Alfred workflow for working with open-link sets.",
   "main": "index.js",
   "scripts": {
-    "build": "tsup ./src/*"
+    "build": "tsup ./src/index.ts -d alfred-workflow --minify",
+    "link-local": "npm link milinks @types/alfred",
+    "help": "tsup --help"
   },
   "keywords": [
     "alfred",
@@ -14,7 +16,12 @@
   "author": "Emerick Bosch",
   "license": "MIT",
   "devDependencies": {
+    "@types/node": "^18.15.11",
     "tsup": "^6.7.0",
-    "typescript": "^5.0.3"
+    "typescript": "^5.0.3",
+    "milinks": "*"
+  },
+  "dependencies": {
+    "fuzzy-search": "^3.2.1"
   }
 }

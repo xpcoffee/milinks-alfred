@@ -7,7 +7,34 @@
 	<key>category</key>
 	<string>Productivity</string>
 	<key>connections</key>
-	<dict/>
+	<dict>
+		<key>370F1CB5-864C-4EDA-9F4F-78F1584A64C2</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>3F662F2C-36AF-4E8B-97D0-9DAC12401265</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>B5A4AB56-CDB9-4218-8235-0CCB1B98651F</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>370F1CB5-864C-4EDA-9F4F-78F1584A64C2</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
 	<key>createdby</key>
 	<string>Emerick Bosch</string>
 	<key>description</key>
@@ -21,37 +48,116 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>concurrently</key>
+				<key>alfredfiltersresults</key>
 				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>2</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>2</integer>
 				<key>escaping</key>
-				<integer>127</integer>
+				<integer>0</integer>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string></string>
 				<key>script</key>
 				<string></string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
+				<string>./milinks.js</string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
 				<string></string>
 				<key>type</key>
-				<integer>5</integer>
+				<integer>8</integer>
+				<key>withspace</key>
+				<false/>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.action.script</string>
+			<string>alfred.workflow.input.scriptfilter</string>
 			<key>uid</key>
-			<string>D6BD2776-468A-451B-ABCF-A274DBCBF3C2</string>
+			<string>3F662F2C-36AF-4E8B-97D0-9DAC12401265</string>
 			<key>version</key>
-			<integer>2</integer>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>milinks</string>
+				<key>subtext</key>
+				<string>Search your links.</string>
+				<key>text</key>
+				<string>MiLinks</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>B5A4AB56-CDB9-4218-8235-0CCB1B98651F</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>passthroughargument</key>
+				<false/>
+				<key>variables</key>
+				<dict>
+					<key>MILINKS_FILE_PATH</key>
+					<string>/Users/rick/dev/code/milinks-alfred/test-data/test.milinks.json</string>
+				</dict>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.argument</string>
+			<key>uid</key>
+			<string>370F1CB5-864C-4EDA-9F4F-78F1584A64C2</string>
+			<key>version</key>
+			<integer>1</integer>
 		</dict>
 	</array>
 	<key>readme</key>
 	<string></string>
 	<key>uidata</key>
 	<dict>
-		<key>D6BD2776-468A-451B-ABCF-A274DBCBF3C2</key>
+		<key>370F1CB5-864C-4EDA-9F4F-78F1584A64C2</key>
 		<dict>
 			<key>xpos</key>
-			<real>645</real>
+			<real>345</real>
 			<key>ypos</key>
-			<real>370</real>
+			<real>275</real>
+		</dict>
+		<key>3F662F2C-36AF-4E8B-97D0-9DAC12401265</key>
+		<dict>
+			<key>xpos</key>
+			<real>425</real>
+			<key>ypos</key>
+			<real>245</real>
+		</dict>
+		<key>B5A4AB56-CDB9-4218-8235-0CCB1B98651F</key>
+		<dict>
+			<key>xpos</key>
+			<real>155</real>
+			<key>ypos</key>
+			<real>245</real>
 		</dict>
 	</dict>
 	<key>userconfigurationconfig</key>
