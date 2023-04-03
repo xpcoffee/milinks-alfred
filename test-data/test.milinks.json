@@ -1,0 +1,17 @@
+{
+  "items": [
+    {
+      "url": "https://google.com",
+      "title": "Google"
+    },
+    {
+      "name": "My group",
+      "items": [
+        {
+          "url": "https://miro.com",
+          "title": "Miro"
+        }
+      ]
+    }
+  ]
+}

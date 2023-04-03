@@ -1,0 +1,20 @@
+{
+  "name": "open-link-alfred",
+  "version": "1.0.0",
+  "description": "An Alfred workflow for working with open-link sets.",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsup ./src/*"
+  },
+  "keywords": [
+    "alfred",
+    "workflow",
+    "open-link"
+  ],
+  "author": "Emerick Bosch",
+  "license": "MIT",
+  "devDependencies": {
+    "tsup": "^6.7.0",
+    "typescript": "^5.0.3"
+  }
+}
