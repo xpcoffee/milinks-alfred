@@ -2,6 +2,8 @@ import { MiLinksSchema, Link, LinkOrGroup } from "milinks";
 import { FilterList, FilterListItem } from "@types/alfred";
 import FuzzySearch from "fuzzy-search";
 import { readFileSync } from "fs";
+import path from "path";
+import { homedir } from "os";
 
 type LinkWithGroupName = { groupName?: string } & Link;
 
@@ -41,12 +43,19 @@ function parseLinkFile(filePath?: string): MiLinksSchema {
   }
 
   try {
-    const linksString = readFileSync(filePath, "utf-8");
+    const linksString = readFileSync(expandHome(filePath), "utf-8");
     return JSON.parse(linksString);
   } catch (e) {
-    console.error("Unable to parse link file into JSON: ");
+    console.error("Unable to parse link file into JSON: " + e);
     process.exit(1);
   }
+}
+
+function expandHome(filePath: string) {
+  if (filePath[0] === "~") {
+    return path.join(homedir(), filePath.slice(1));
+  }
+  return filePath;
 }
 
 function flattenLinks(links: MiLinksSchema): LinkWithGroupName[] {
