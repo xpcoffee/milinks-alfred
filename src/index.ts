@@ -1,9 +1,16 @@
-import { MiLinksSchema, Link, LinkOrGroup, LinkGroup } from "milinks";
+import {
+  MiLinksSchema,
+  Link,
+  LinkOrGroup,
+  LinkGroup,
+  LinkGroupRef,
+} from "milinks";
 import { FilterList, FilterListItem } from "@types/alfred";
 import FuzzySearch from "fuzzy-search";
 import { readFileSync } from "fs";
 import path from "path";
 import { homedir } from "os";
+import axios from "axios";
 
 type AnnotatedLink = { groupName?: string } & Link;
 
@@ -15,8 +22,9 @@ type AnnotatedLink = { groupName?: string } & Link;
  *    MILINKS_SEARCH_ALL: a boolean flag. if set, search behaviour will search all tags at the same time
  *    MILINKS_GROUP: a JSON string. if set, will be used as the top-level group instead of the contents of MILINKS_FILE_PATH.
  */
-export function script() {
-  const searchAllLinks = !!process.env["MILINKS_SEARCH_ALL"];
+export async function script() {
+  const searchAllLinks =
+    process.env["MILINKS_SEARCH_ALL"]?.toLowerCase() === "true";
   const linksFilePath = process.env["MILINKS_FILE_PATH"];
   const groupString = process.env["MILINKS_GROUP"];
   const [_script, _preamble, query] = process.argv;
@@ -31,12 +39,12 @@ export function script() {
     return linksToFilterList(filteredLinks);
   }
 
-  function searchDefault(): FilterList {
-    const items = getFilterListItems(nestedLinks);
+  async function searchDefault(): Promise<FilterList> {
+    const items = await getFilterListItems(nestedLinks);
     return { items: fuzzyFindFilterListItems(items, query) };
   }
 
-  const alfredList = searchAllLinks ? searchAll() : searchDefault();
+  const alfredList = searchAllLinks ? searchAll() : await searchDefault();
 
   console.log(JSON.stringify(alfredList));
 }
@@ -78,23 +86,32 @@ function expandHome(filePath: string) {
   return filePath;
 }
 
-function getFilterListItems(group: LinkGroup): FilterListItem[] {
-  const items = group.items.map<FilterListItem>((item) => {
-    if (item.type === "group") {
-      return {
-        uid: Date.now().toString(),
-        title: item.name,
-        arg: "group",
-        variables: {
-          MILINKS_GROUP: JSON.stringify(item),
-        },
-      };
-    } else {
-      return linkToFilterItem({ ...item, groupName: group.name });
-    }
-  });
+async function getFilterListItems(group: LinkGroup): Promise<FilterListItem[]> {
+  function groupToListItem(gp: LinkGroup): FilterListItem {
+    return {
+      uid: Date.now().toString(),
+      title: gp.name,
+      arg: "group",
+      variables: {
+        MILINKS_GROUP: JSON.stringify(gp),
+      },
+    };
+  }
 
-  return items;
+  const items = await Promise.all(
+    group.items.map<Promise<FilterListItem | undefined>>(async (item) => {
+      if (item.type === "group") {
+        return groupToListItem(item);
+      } else if (item.type === "link") {
+        return linkToFilterItem({ ...item, groupName: group.name });
+      } else if (item.type === "groupRef") {
+        const resolvedGroup = await resolveLinkGroupRef(item);
+        return resolvedGroup ? groupToListItem(resolvedGroup) : undefined;
+      }
+    })
+  );
+
+  return items.filter((item): item is FilterListItem => item !== undefined);
 }
 
 function flattenLinks(links: MiLinksSchema): AnnotatedLink[] {
@@ -110,7 +127,7 @@ function flattenLinks(links: MiLinksSchema): AnnotatedLink[] {
         .filter((i) => i !== undefined && i?.length)
         .join("/");
       node.items.forEach((item) => addLinks(accumulator, item, newGroupName));
-    } else {
+    } else if (node.type === "link") {
       accumulator.push({ ...node, groupName });
     }
   }
@@ -182,4 +199,29 @@ function linkToFilterItem(link: AnnotatedLink): FilterListItem {
       url: link.url,
     },
   };
+}
+
+/**
+ * TODO - validate the schema
+ */
+async function resolveLinkGroupRef({
+  url,
+  alias,
+}: LinkGroupRef): Promise<LinkGroup | undefined> {
+  const fileUrlPrefix = "file://";
+
+  if (url.startsWith(fileUrlPrefix)) {
+    const filePath = url.slice(fileUrlPrefix.length);
+    const fileContents = readFileSync(filePath, "utf-8");
+    return JSON.parse(fileContents);
+  } else {
+    const response = await axios(url);
+    const jsonResult = response.data;
+
+    if (alias) {
+      jsonResult["name"] = alias;
+    }
+
+    return jsonResult;
+  }
 }

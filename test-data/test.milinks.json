@@ -4,19 +4,8 @@
   "items": [
     {
       "type": "link",
-      "url": "https://google.com",
-      "title": "Google"
-    },
-    {
-      "type": "group",
-      "name": "My group",
-      "items": [
-        {
-          "type": "link",
-          "url": "https://miro.com",
-          "title": "Miro"
-        }
-      ]
+      "url": "https://miro.com",
+      "title": "Miro"
     }
   ]
 }
