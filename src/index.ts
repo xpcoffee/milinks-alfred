@@ -67,7 +67,6 @@ function flattenLinks(links: MiLinksSchema): LinkWithGroupName[] {
     groupName?: string
   ) {
     if ("items" in node) {
-      console.error({ groupName });
       const newGroupName = [groupName, node.name]
         .filter((i) => i !== undefined && i?.length)
         .join("/");
