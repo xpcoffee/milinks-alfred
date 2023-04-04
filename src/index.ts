@@ -15,6 +15,14 @@ import axios from "axios";
 type AnnotatedLink = { groupName?: string } & Link;
 
 /**
+ * TODO
+ *  - resolve group refs for search-all
+ *  - find a way to bundle dependencies into alfred script
+ *  - add README
+ *  - extract bits that can be pulled into nodejs library
+ */
+
+/**
  * Alfred script filter
  *
  * Environment variables
