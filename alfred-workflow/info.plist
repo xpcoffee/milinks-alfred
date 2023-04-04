@@ -21,6 +21,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>3F662F2C-36AF-4E8B-97D0-9DAC12401265</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>1084EBE9-1F9A-4A90-A5C8-03EE84DCD3A2</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>B5A4AB56-CDB9-4218-8235-0CCB1B98651F</key>
 		<array>
 			<dict>
@@ -116,6 +129,27 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>browser</key>
+				<string></string>
+				<key>skipqueryencode</key>
+				<false/>
+				<key>skipvarencode</key>
+				<false/>
+				<key>spaces</key>
+				<string></string>
+				<key>url</key>
+				<string>{var:url}</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.openurl</string>
+			<key>uid</key>
+			<string>1084EBE9-1F9A-4A90-A5C8-03EE84DCD3A2</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>argument</key>
 				<string></string>
 				<key>passthroughargument</key>
@@ -123,7 +157,7 @@
 				<key>variables</key>
 				<dict>
 					<key>MILINKS_FILE_PATH</key>
-					<string>/Users/rick/dev/code/milinks-alfred/test-data/test.milinks.json</string>
+					<string>{var:milinksFile}</string>
 				</dict>
 			</dict>
 			<key>type</key>
@@ -138,6 +172,13 @@
 	<string></string>
 	<key>uidata</key>
 	<dict>
+		<key>1084EBE9-1F9A-4A90-A5C8-03EE84DCD3A2</key>
+		<dict>
+			<key>xpos</key>
+			<real>680</real>
+			<key>ypos</key>
+			<real>250</real>
+		</dict>
 		<key>370F1CB5-864C-4EDA-9F4F-78F1584A64C2</key>
 		<dict>
 			<key>xpos</key>
@@ -161,7 +202,31 @@
 		</dict>
 	</dict>
 	<key>userconfigurationconfig</key>
-	<array/>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>~/.milinks.json</string>
+				<key>placeholder</key>
+				<string>~/.milinks.json</string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>The file containing your links.</string>
+			<key>label</key>
+			<string>MiLinks file</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>milinksFile</string>
+		</dict>
+	</array>
+	<key>version</key>
+	<string></string>
 	<key>webaddress</key>
 	<string></string>
 </dict>
