@@ -1,45 +1,51 @@
-import { MiLinksSchema, Link, LinkOrGroup } from "milinks";
+import { MiLinksSchema, Link, LinkOrGroup, LinkGroup } from "milinks";
 import { FilterList, FilterListItem } from "@types/alfred";
 import FuzzySearch from "fuzzy-search";
 import { readFileSync } from "fs";
 import path from "path";
 import { homedir } from "os";
 
-type LinkWithGroupName = { groupName?: string } & Link;
+type AnnotatedLink = { groupName?: string } & Link;
 
 /**
  * Script
  */
 export function script() {
+  const searchAllLinks = !!process.env["MILINKS_SEARCH_ALL"];
   const linksFilePath = process.env["MILINKS_FILE_PATH"];
+  const groupString = process.env["MILINKS_GROUP"];
   const [_script, _preamble, query] = process.argv;
-  const nestedLinks = parseLinkFile(linksFilePath);
-  const links = flattenLinks(nestedLinks);
-  const filteredLinks = fuzzyFind(links, query);
-  const alfredList = toFilterList(filteredLinks);
+
+  const nestedLinks = groupString
+    ? parseGroupString(groupString)
+    : parseLinkFile(linksFilePath);
+
+  function searchAll(): FilterList {
+    const links = flattenLinks(nestedLinks);
+    const filteredLinks = fuzzyFindLinks(links, query);
+    return linksToFilterList(filteredLinks);
+  }
+
+  function searchDefault(): FilterList {
+    const { items } = getCurrentLinkOptions(nestedLinks);
+    return { items: fuzzyFindFilterListItems(items, query) };
+  }
+
+  const alfredList = searchAllLinks ? searchAll() : searchDefault();
+
   console.log(JSON.stringify(alfredList));
 }
 
-function fuzzyFind(
-  links: LinkWithGroupName[],
-  query: string
-): LinkWithGroupName[] {
-  if (!query) {
-    return links;
+/**
+ * TODO - actually validate the schema
+ */
+function parseGroupString(groupString: string): LinkGroup {
+  try {
+    return JSON.parse(groupString);
+  } catch (e) {
+    console.error("Unable to parse link group into JSON: " + e);
+    process.exit(1);
   }
-
-  const terms = query.split(" ");
-
-  let filteredLinks = links;
-  terms.forEach((term) => {
-    filteredLinks = new FuzzySearch(filteredLinks, [
-      "description",
-      "title",
-      "groupName",
-    ]).search(term);
-  });
-
-  return filteredLinks;
 }
 
 /**
@@ -67,11 +73,32 @@ function expandHome(filePath: string) {
   return filePath;
 }
 
-function flattenLinks(links: MiLinksSchema): LinkWithGroupName[] {
-  const result: LinkWithGroupName[] = [];
+function getCurrentLinkOptions(group: LinkGroup): FilterList {
+  const items = group.items.map<FilterListItem>((item) => {
+    if ("items" in item) {
+      return {
+        uid: Date.now().toString(),
+        title: item.name ?? "Unnamed group",
+        arg: "group",
+        variables: {
+          MILINKS_GROUP: JSON.stringify(item),
+        },
+      };
+    } else {
+      return linkToFilterItem({ ...item, groupName: group.name });
+    }
+  });
+
+  return {
+    items,
+  };
+}
+
+function flattenLinks(links: MiLinksSchema): AnnotatedLink[] {
+  const result: AnnotatedLink[] = [];
 
   function addLinks(
-    accumulator: LinkWithGroupName[],
+    accumulator: AnnotatedLink[],
     node: LinkOrGroup,
     groupName?: string
   ) {
@@ -89,24 +116,67 @@ function flattenLinks(links: MiLinksSchema): LinkWithGroupName[] {
   return result;
 }
 
-function toFilterList(links: LinkWithGroupName[]): FilterList {
-  function toFilterItem(link: LinkWithGroupName): FilterListItem {
-    const subtitle = [link.groupName, link.description, link.url]
-      .filter((item) => item !== undefined && item?.length)
-      .join(" | ");
-
-    return {
-      uid: link.title,
-      title: link.title,
-      subtitle,
-      arg: link.url,
-      variables: {
-        url: link.url,
-      },
-    };
+/**
+ * Filter links using fuzzy find
+ */
+function fuzzyFindLinks(
+  links: AnnotatedLink[],
+  query: string
+): AnnotatedLink[] {
+  if (!query) {
+    return links;
   }
 
+  const terms = query.split(" ");
+
+  let filteredLinks = links;
+  terms.forEach((term) => {
+    filteredLinks = new FuzzySearch(filteredLinks, [
+      "description",
+      "title",
+      "groupName",
+    ]).search(term);
+  });
+
+  return filteredLinks;
+}
+
+function fuzzyFindFilterListItems(
+  filterListItems: FilterListItem[],
+  query
+): FilterListItem[] {
+  if (!query) {
+    return filterListItems;
+  }
+
+  const terms = query.split(" ");
+
+  let filteredItems = filterListItems;
+  terms.forEach((term) => {
+    filteredItems = new FuzzySearch(filteredItems, ["title"]).search(term);
+  });
+
+  return filteredItems;
+}
+
+function linksToFilterList(links: AnnotatedLink[]): FilterList {
   return {
-    items: links.map(toFilterItem),
+    items: links.map(linkToFilterItem),
+  };
+}
+
+function linkToFilterItem(link: AnnotatedLink): FilterListItem {
+  const subtitle = [link.groupName, link.description, link.url]
+    .filter((item) => item !== undefined && item?.length)
+    .join(" | ");
+
+  return {
+    uid: link.title,
+    title: link.title,
+    subtitle,
+    arg: link.url,
+    variables: {
+      url: link.url,
+    },
   };
 }
