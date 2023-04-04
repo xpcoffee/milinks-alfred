@@ -24,13 +24,22 @@ function fuzzyFind(
   links: LinkWithGroupName[],
   query: string
 ): LinkWithGroupName[] {
-  const result = new FuzzySearch(links, [
-    "description",
-    "title",
-    "url",
-    "groupName",
-  ]).search(query);
-  return result;
+  if (!query) {
+    return links;
+  }
+
+  const terms = query.split(" ");
+
+  let filteredLinks = links;
+  terms.forEach((term) => {
+    filteredLinks = new FuzzySearch(filteredLinks, [
+      "description",
+      "title",
+      "groupName",
+    ]).search(term);
+  });
+
+  return filteredLinks;
 }
 
 /**
