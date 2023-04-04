@@ -101,6 +101,40 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>externaltriggerid</key>
+				<string>milinks</string>
+				<key>passinputasargument</key>
+				<false/>
+				<key>passvariables</key>
+				<true/>
+				<key>workflowbundleid</key>
+				<string>self</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.callexternaltrigger</string>
+			<key>uid</key>
+			<string>A2AEFA74-584E-4B7C-9BAA-5FFE9FF55B4F</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>availableviaurlhandler</key>
+				<true/>
+				<key>triggerid</key>
+				<string>milinks</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>83B15899-D440-41E3-B386-FCF0C248DFA3</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
@@ -116,25 +150,6 @@
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
 			<string>B5A4AB56-CDB9-4218-8235-0CCB1B98651F</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>externaltriggerid</key>
-				<string>milinks</string>
-				<key>passinputasargument</key>
-				<false/>
-				<key>passvariables</key>
-				<true/>
-				<key>workflowbundleid</key>
-				<string>self</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.output.callexternaltrigger</string>
-			<key>uid</key>
-			<string>A2AEFA74-584E-4B7C-9BAA-5FFE9FF55B4F</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
@@ -184,6 +199,27 @@
 			<string>3F662F2C-36AF-4E8B-97D0-9DAC12401265</string>
 			<key>version</key>
 			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>browser</key>
+				<string></string>
+				<key>skipqueryencode</key>
+				<false/>
+				<key>skipvarencode</key>
+				<false/>
+				<key>spaces</key>
+				<string></string>
+				<key>url</key>
+				<string>{var:url}</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.openurl</string>
+			<key>uid</key>
+			<string>1084EBE9-1F9A-4A90-A5C8-03EE84DCD3A2</string>
+			<key>version</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -242,48 +278,14 @@
 				<dict>
 					<key>MILINKS_FILE_PATH</key>
 					<string>{var:milinksFile}</string>
+					<key>MILINKS_SEARCH_ALL</key>
+					<string>{var:searchAll}</string>
 				</dict>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.utility.argument</string>
 			<key>uid</key>
 			<string>370F1CB5-864C-4EDA-9F4F-78F1584A64C2</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>browser</key>
-				<string></string>
-				<key>skipqueryencode</key>
-				<false/>
-				<key>skipvarencode</key>
-				<false/>
-				<key>spaces</key>
-				<string></string>
-				<key>url</key>
-				<string>{var:url}</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.openurl</string>
-			<key>uid</key>
-			<string>1084EBE9-1F9A-4A90-A5C8-03EE84DCD3A2</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>availableviaurlhandler</key>
-				<true/>
-				<key>triggerid</key>
-				<string>milinks</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.trigger.external</string>
-			<key>uid</key>
-			<string>83B15899-D440-41E3-B386-FCF0C248DFA3</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
@@ -295,51 +297,51 @@
 		<key>1084EBE9-1F9A-4A90-A5C8-03EE84DCD3A2</key>
 		<dict>
 			<key>xpos</key>
-			<real>710</real>
+			<real>735</real>
 			<key>ypos</key>
-			<real>315</real>
+			<real>260</real>
 		</dict>
 		<key>370F1CB5-864C-4EDA-9F4F-78F1584A64C2</key>
 		<dict>
 			<key>xpos</key>
-			<real>230</real>
+			<real>315</real>
 			<key>ypos</key>
 			<real>275</real>
 		</dict>
 		<key>3D7FA5F4-9F61-475B-A706-72A86291C5C0</key>
 		<dict>
 			<key>xpos</key>
-			<real>490</real>
+			<real>575</real>
 			<key>ypos</key>
 			<real>265</real>
 		</dict>
 		<key>3F662F2C-36AF-4E8B-97D0-9DAC12401265</key>
 		<dict>
 			<key>xpos</key>
-			<real>320</real>
+			<real>405</real>
 			<key>ypos</key>
 			<real>245</real>
 		</dict>
 		<key>83B15899-D440-41E3-B386-FCF0C248DFA3</key>
 		<dict>
 			<key>xpos</key>
-			<real>50</real>
+			<real>115</real>
 			<key>ypos</key>
-			<real>325</real>
+			<real>85</real>
 		</dict>
 		<key>A2AEFA74-584E-4B7C-9BAA-5FFE9FF55B4F</key>
 		<dict>
 			<key>xpos</key>
-			<real>710</real>
+			<real>735</real>
 			<key>ypos</key>
-			<real>190</real>
+			<real>85</real>
 		</dict>
 		<key>B5A4AB56-CDB9-4218-8235-0CCB1B98651F</key>
 		<dict>
 			<key>xpos</key>
-			<real>60</real>
+			<real>115</real>
 			<key>ypos</key>
-			<real>160</real>
+			<real>245</real>
 		</dict>
 	</dict>
 	<key>userconfigurationconfig</key>
@@ -364,6 +366,25 @@
 			<string>textfield</string>
 			<key>variable</key>
 			<string>milinksFile</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<false/>
+				<key>required</key>
+				<false/>
+				<key>text</key>
+				<string>Search all links</string>
+			</dict>
+			<key>description</key>
+			<string>Searches through all links at the same time instead of navigating through the groups</string>
+			<key>label</key>
+			<string>Search all links</string>
+			<key>type</key>
+			<string>checkbox</string>
+			<key>variable</key>
+			<string>searchAll</string>
 		</dict>
 	</array>
 	<key>version</key>

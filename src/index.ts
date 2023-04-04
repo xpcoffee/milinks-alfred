@@ -27,7 +27,7 @@ export function script() {
   }
 
   function searchDefault(): FilterList {
-    const { items } = getCurrentLinkOptions(nestedLinks);
+    const items = getCurrentLinkOptions(nestedLinks);
     return { items: fuzzyFindFilterListItems(items, query) };
   }
 
@@ -73,7 +73,7 @@ function expandHome(filePath: string) {
   return filePath;
 }
 
-function getCurrentLinkOptions(group: LinkGroup): FilterList {
+function getCurrentLinkOptions(group: LinkGroup): FilterListItem[] {
   const items = group.items.map<FilterListItem>((item) => {
     if ("items" in item) {
       return {
@@ -89,9 +89,7 @@ function getCurrentLinkOptions(group: LinkGroup): FilterList {
     }
   });
 
-  return {
-    items,
-  };
+  return items;
 }
 
 function flattenLinks(links: MiLinksSchema): AnnotatedLink[] {
