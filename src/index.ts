@@ -8,7 +8,12 @@ import { homedir } from "os";
 type AnnotatedLink = { groupName?: string } & Link;
 
 /**
- * Script
+ * Alfred script filter
+ *
+ * Environment variables
+ *    MILINKS_FILE_PATH: a string. the location of the top-level MiLinks group
+ *    MILINKS_SEARCH_ALL: a boolean flag. if set, search behaviour will search all tags at the same time
+ *    MILINKS_GROUP: a JSON string. if set, will be used as the top-level group instead of the contents of MILINKS_FILE_PATH.
  */
 export function script() {
   const searchAllLinks = !!process.env["MILINKS_SEARCH_ALL"];
@@ -27,7 +32,7 @@ export function script() {
   }
 
   function searchDefault(): FilterList {
-    const items = getCurrentLinkOptions(nestedLinks);
+    const items = getFilterListItems(nestedLinks);
     return { items: fuzzyFindFilterListItems(items, query) };
   }
 
@@ -73,12 +78,12 @@ function expandHome(filePath: string) {
   return filePath;
 }
 
-function getCurrentLinkOptions(group: LinkGroup): FilterListItem[] {
+function getFilterListItems(group: LinkGroup): FilterListItem[] {
   const items = group.items.map<FilterListItem>((item) => {
-    if ("items" in item) {
+    if (item.type === "group") {
       return {
         uid: Date.now().toString(),
-        title: item.name ?? "Unnamed group",
+        title: item.name,
         arg: "group",
         variables: {
           MILINKS_GROUP: JSON.stringify(item),
@@ -100,7 +105,7 @@ function flattenLinks(links: MiLinksSchema): AnnotatedLink[] {
     node: LinkOrGroup,
     groupName?: string
   ) {
-    if ("items" in node) {
+    if (node.type === "group") {
       const newGroupName = [groupName, node.name]
         .filter((i) => i !== undefined && i?.length)
         .join("/");
