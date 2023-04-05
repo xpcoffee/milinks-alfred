@@ -5,7 +5,7 @@ import {
   LinkGroup,
   LinkGroupRef,
 } from "milinks";
-import { FilterList, FilterListItem } from "@types/alfred";
+import { FilterList, FilterListItem } from "alfred";
 import FuzzySearch from "fuzzy-search";
 import { readFileSync } from "fs";
 import path from "path";
