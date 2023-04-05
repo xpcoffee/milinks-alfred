@@ -7,9 +7,9 @@ import {
 } from "milinks";
 import { FilterList, FilterListItem } from "alfred";
 import FuzzySearch from "fuzzy-search";
-import { readFileSync } from "fs";
-import path from "path";
-import { homedir } from "os";
+import { readFileSync } from "node:fs";
+import path from "node:path";
+import { homedir } from "node:os";
 import axios from "axios";
 
 type AnnotatedLink = { groupName?: string } & Link;
@@ -30,7 +30,7 @@ type AnnotatedLink = { groupName?: string } & Link;
  *    MILINKS_SEARCH_ALL: a boolean flag. if set, search behaviour will search all tags at the same time
  *    MILINKS_GROUP: a JSON string. if set, will be used as the top-level group instead of the contents of MILINKS_FILE_PATH.
  */
-export async function script() {
+(async function browseLinks() {
   const searchAllLinks =
     process.env["MILINKS_SEARCH_ALL"]?.toLowerCase() === "true";
   const linksFilePath = process.env["MILINKS_FILE_PATH"];
@@ -55,7 +55,7 @@ export async function script() {
   const alfredList = searchAllLinks ? searchAll() : await searchDefault();
 
   console.log(JSON.stringify(alfredList));
-}
+})();
 
 /**
  * TODO - actually validate the schema

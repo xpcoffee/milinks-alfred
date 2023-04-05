@@ -4,7 +4,7 @@
   "description": "An Alfred workflow for working with open-link sets.",
   "main": "index.js",
   "scripts": {
-    "build": "webpack build",
+    "build": "webpack build && rm -f ./alfred-workflow/script.js.LICENSE.txt",
     "link-local": "npm link milinks @types/alfred"
   },
   "keywords": [

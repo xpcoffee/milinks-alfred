@@ -1,8 +1,9 @@
 const path = require('path');
 
 module.exports = {
-  mode: "production",
+  mode: "development",
   entry: './src/index.ts',
+  target: "node",
   module: {
     rules: [
       {
@@ -14,14 +15,9 @@ module.exports = {
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
-    fallback: {
-      "os": false,
-      "fs": false,
-      "path": false,
-    }
   },
   output: {
-    filename: 'index.js',
+    filename: 'script.js',
     path: path.resolve(__dirname, 'alfred-workflow'),
   },
 };
