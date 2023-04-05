@@ -171,7 +171,7 @@ function fuzzyFindLinks(
 
 function fuzzyFindFilterListItems(
   filterListItems: FilterListItem[],
-  query
+  query: string
 ): FilterListItem[] {
   if (!query) {
     return filterListItems;
