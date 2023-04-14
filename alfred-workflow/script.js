@@ -223,14 +223,69 @@ eval("\n\nvar parseUrl = (__webpack_require__(/*! url */ \"url\").parse);\n\nvar
 
 /***/ }),
 
+/***/ "./src/dataFile.ts":
+/*!*************************!*\
+  !*** ./src/dataFile.ts ***!
+  \*************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.parseLinkFile = void 0;\nconst fs_1 = __webpack_require__(/*! fs */ \"fs\");\nconst os_1 = __webpack_require__(/*! os */ \"os\");\nconst path_1 = __importDefault(__webpack_require__(/*! path */ \"path\"));\nconst dataParsing_1 = __webpack_require__(/*! ./dataParsing */ \"./src/dataParsing.ts\");\nfunction parseLinkFile(filePath) {\n    if (!filePath) {\n        console.error(\"No MiLinks file path.\");\n        process.exit(1);\n    }\n    try {\n        const linksString = (0, fs_1.readFileSync)(expandHome(filePath), \"utf-8\");\n        return (0, dataParsing_1.parseDataString)(linksString);\n    }\n    catch (e) {\n        console.error(\"Unable to parse link file into JSON: \" + e);\n        process.exit(1);\n    }\n}\nexports.parseLinkFile = parseLinkFile;\nfunction expandHome(filePath) {\n    if (filePath[0] === \"~\") {\n        return path_1.default.join((0, os_1.homedir)(), filePath.slice(1));\n    }\n    return filePath;\n}\n\n\n//# sourceURL=webpack://open-link-alfred/./src/dataFile.ts?");
+
+/***/ }),
+
+/***/ "./src/dataParsing.ts":
+/*!****************************!*\
+  !*** ./src/dataParsing.ts ***!
+  \****************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.parseDataString = void 0;\n/**\n * TODO - actually validate the schema\n */\nfunction parseDataString(groupString) {\n    try {\n        return JSON.parse(groupString);\n    }\n    catch (e) {\n        console.error(\"Unable to parse link group into JSON: \" + e);\n        process.exit(1);\n    }\n}\nexports.parseDataString = parseDataString;\n\n\n//# sourceURL=webpack://open-link-alfred/./src/dataParsing.ts?");
+
+/***/ }),
+
+/***/ "./src/filtering.ts":
+/*!**************************!*\
+  !*** ./src/filtering.ts ***!
+  \**************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.fuzzyFindFilterListItems = void 0;\nconst fuzzy_search_1 = __importDefault(__webpack_require__(/*! fuzzy-search */ \"./node_modules/fuzzy-search/src/FuzzySearch.js\"));\nfunction fuzzyFindFilterListItems(filterListItems, query) {\n    if (!query) {\n        return filterListItems;\n    }\n    const terms = query.split(\" \");\n    let filteredItems = filterListItems;\n    terms.forEach((term) => {\n        filteredItems = new fuzzy_search_1.default(filteredItems, [\"title\"]).search(term);\n    });\n    return filteredItems;\n}\nexports.fuzzyFindFilterListItems = fuzzyFindFilterListItems;\n\n\n//# sourceURL=webpack://open-link-alfred/./src/filtering.ts?");
+
+/***/ }),
+
 /***/ "./src/index.ts":
 /*!**********************!*\
   !*** ./src/index.ts ***!
   \**********************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nconst dataFile_1 = __webpack_require__(/*! ./dataFile */ \"./src/dataFile.ts\");\nconst dataParsing_1 = __webpack_require__(/*! ./dataParsing */ \"./src/dataParsing.ts\");\nconst filtering_1 = __webpack_require__(/*! ./filtering */ \"./src/filtering.ts\");\nconst transforms_1 = __webpack_require__(/*! ./transforms */ \"./src/transforms.ts\");\n/**\n * TODO\n *  - resolve group refs for search-all\n *  - add README\n *  - extract bits that can be pulled into nodejs library\n */\n/**\n * Alfred script filter\n *\n * Environment variables\n *    MILINKS_FILE_PATH: a string. the location of the top-level MiLinks group\n *    MILINKS_SEARCH_ALL: a boolean integer; 0 or 1. if set to 1, search behaviour will search all tags at the same time\n *    MILINKS_GROUP: a JSON string. if set, will be used as the top-level group instead of the contents of MILINKS_FILE_PATH.\n */\n(async function browseLinks() {\n    const searchAllLinks = process.env[\"MILINKS_SEARCH_ALL\"]?.toLowerCase() === \"1\";\n    const linksFilePath = process.env[\"MILINKS_FILE_PATH\"];\n    const groupString = process.env[\"MILINKS_GROUP\"];\n    const [_script, _preamble, query] = process.argv;\n    const nestedLinks = groupString\n        ? (0, dataParsing_1.parseDataString)(groupString)\n        : (0, dataFile_1.parseLinkFile)(linksFilePath);\n    console.error(`search all ${process.env[\"MILINKS_SEARCH_ALL\"]}`);\n    const getSearchItems = searchAllLinks\n        ? transforms_1.toFlatAlfredFilterListItems\n        : transforms_1.toAlfredFilterListItems;\n    const items = await getSearchItems(nestedLinks);\n    const filteredItems = (0, filtering_1.fuzzyFindFilterListItems)(items, query);\n    console.log(JSON.stringify((0, transforms_1.toAlfredFilterList)(filteredItems)));\n})();\n\n\n//# sourceURL=webpack://open-link-alfred/./src/index.ts?");
+
+/***/ }),
+
+/***/ "./src/linkResolution.ts":
+/*!*******************************!*\
+  !*** ./src/linkResolution.ts ***!
+  \*******************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
-eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nconst fuzzy_search_1 = __importDefault(__webpack_require__(/*! fuzzy-search */ \"./node_modules/fuzzy-search/src/FuzzySearch.js\"));\nconst node_fs_1 = __webpack_require__(/*! node:fs */ \"node:fs\");\nconst node_path_1 = __importDefault(__webpack_require__(/*! node:path */ \"node:path\"));\nconst node_os_1 = __webpack_require__(/*! node:os */ \"node:os\");\nconst axios_1 = __importDefault(__webpack_require__(/*! axios */ \"./node_modules/axios/dist/node/axios.cjs\"));\n/**\n * TODO\n *  - resolve group refs for search-all\n *  - find a way to bundle dependencies into alfred script\n *  - add README\n *  - extract bits that can be pulled into nodejs library\n */\n/**\n * Alfred script filter\n *\n * Environment variables\n *    MILINKS_FILE_PATH: a string. the location of the top-level MiLinks group\n *    MILINKS_SEARCH_ALL: a boolean flag. if set, search behaviour will search all tags at the same time\n *    MILINKS_GROUP: a JSON string. if set, will be used as the top-level group instead of the contents of MILINKS_FILE_PATH.\n */\n(async function browseLinks() {\n    const searchAllLinks = process.env[\"MILINKS_SEARCH_ALL\"]?.toLowerCase() === \"true\";\n    const linksFilePath = process.env[\"MILINKS_FILE_PATH\"];\n    const groupString = process.env[\"MILINKS_GROUP\"];\n    const [_script, _preamble, query] = process.argv;\n    const nestedLinks = groupString\n        ? parseGroupString(groupString)\n        : parseLinkFile(linksFilePath);\n    function searchAll() {\n        const links = flattenLinks(nestedLinks);\n        const filteredLinks = fuzzyFindLinks(links, query);\n        return linksToFilterList(filteredLinks);\n    }\n    async function searchDefault() {\n        const items = await getFilterListItems(nestedLinks);\n        return { items: fuzzyFindFilterListItems(items, query) };\n    }\n    const alfredList = searchAllLinks ? searchAll() : await searchDefault();\n    console.log(JSON.stringify(alfredList));\n})();\n/**\n * TODO - actually validate the schema\n */\nfunction parseGroupString(groupString) {\n    try {\n        return JSON.parse(groupString);\n    }\n    catch (e) {\n        console.error(\"Unable to parse link group into JSON: \" + e);\n        process.exit(1);\n    }\n}\n/**\n * TODO - actually validate the schema\n */\nfunction parseLinkFile(filePath) {\n    if (!filePath) {\n        console.error(\"No MiLinks file path.\");\n        process.exit(1);\n    }\n    try {\n        const linksString = (0, node_fs_1.readFileSync)(expandHome(filePath), \"utf-8\");\n        return JSON.parse(linksString);\n    }\n    catch (e) {\n        console.error(\"Unable to parse link file into JSON: \" + e);\n        process.exit(1);\n    }\n}\nfunction expandHome(filePath) {\n    if (filePath[0] === \"~\") {\n        return node_path_1.default.join((0, node_os_1.homedir)(), filePath.slice(1));\n    }\n    return filePath;\n}\nasync function getFilterListItems(group) {\n    function groupToListItem(gp) {\n        return {\n            uid: Date.now().toString(),\n            title: gp.name,\n            arg: \"group\",\n            variables: {\n                MILINKS_GROUP: JSON.stringify(gp),\n            },\n        };\n    }\n    const items = await Promise.all(group.items.map(async (item) => {\n        if (item.type === \"group\") {\n            return groupToListItem(item);\n        }\n        else if (item.type === \"link\") {\n            return linkToFilterItem({ ...item, groupName: group.name });\n        }\n        else if (item.type === \"groupRef\") {\n            const resolvedGroup = await resolveLinkGroupRef(item);\n            return resolvedGroup ? groupToListItem(resolvedGroup) : undefined;\n        }\n    }));\n    return items.filter((item) => item !== undefined);\n}\nfunction flattenLinks(links) {\n    const result = [];\n    function addLinks(accumulator, node, groupName) {\n        if (node.type === \"group\") {\n            const newGroupName = [groupName, node.name]\n                .filter((i) => i !== undefined && i?.length)\n                .join(\"/\");\n            node.items.forEach((item) => addLinks(accumulator, item, newGroupName));\n        }\n        else if (node.type === \"link\") {\n            accumulator.push({ ...node, groupName });\n        }\n    }\n    addLinks(result, links);\n    return result;\n}\n/**\n * Filter links using fuzzy find\n */\nfunction fuzzyFindLinks(links, query) {\n    if (!query) {\n        return links;\n    }\n    const terms = query.split(\" \");\n    let filteredLinks = links;\n    terms.forEach((term) => {\n        filteredLinks = new fuzzy_search_1.default(filteredLinks, [\n            \"description\",\n            \"title\",\n            \"groupName\",\n        ]).search(term);\n    });\n    return filteredLinks;\n}\nfunction fuzzyFindFilterListItems(filterListItems, query) {\n    if (!query) {\n        return filterListItems;\n    }\n    const terms = query.split(\" \");\n    let filteredItems = filterListItems;\n    terms.forEach((term) => {\n        filteredItems = new fuzzy_search_1.default(filteredItems, [\"title\"]).search(term);\n    });\n    return filteredItems;\n}\nfunction linksToFilterList(links) {\n    return {\n        items: links.map(linkToFilterItem),\n    };\n}\nfunction linkToFilterItem(link) {\n    const subtitle = [link.groupName, link.description, link.url]\n        .filter((item) => item !== undefined && item?.length)\n        .join(\" | \");\n    return {\n        uid: link.title,\n        title: link.title,\n        subtitle,\n        arg: link.url,\n        variables: {\n            url: link.url,\n        },\n    };\n}\n/**\n * TODO - validate the schema\n */\nasync function resolveLinkGroupRef({ url, alias, }) {\n    const fileUrlPrefix = \"file://\";\n    if (url.startsWith(fileUrlPrefix)) {\n        const filePath = url.slice(fileUrlPrefix.length);\n        const fileContents = (0, node_fs_1.readFileSync)(filePath, \"utf-8\");\n        return JSON.parse(fileContents);\n    }\n    else {\n        const response = await (0, axios_1.default)(url);\n        const jsonResult = response.data;\n        if (alias) {\n            jsonResult[\"name\"] = alias;\n        }\n        return jsonResult;\n    }\n}\n\n\n//# sourceURL=webpack://open-link-alfred/./src/index.ts?");
+eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.resolveLinkGroupRef = void 0;\nconst axios_1 = __importDefault(__webpack_require__(/*! axios */ \"./node_modules/axios/dist/node/axios.cjs\"));\nconst dataFile_1 = __webpack_require__(/*! ./dataFile */ \"./src/dataFile.ts\");\n/**\n * TODO - validate the schema\n */\nasync function resolveLinkGroupRef({ url, alias, }) {\n    const fileUrlPrefix = \"file://\";\n    if (url.startsWith(fileUrlPrefix)) {\n        const filePath = url.slice(fileUrlPrefix.length);\n        return (0, dataFile_1.parseLinkFile)(filePath);\n    }\n    else {\n        const response = await (0, axios_1.default)(url);\n        const jsonResult = response.data;\n        if (alias) {\n            jsonResult[\"name\"] = alias;\n        }\n        return jsonResult;\n    }\n}\nexports.resolveLinkGroupRef = resolveLinkGroupRef;\n\n\n//# sourceURL=webpack://open-link-alfred/./src/linkResolution.ts?");
+
+/***/ }),
+
+/***/ "./src/transforms.ts":
+/*!***************************!*\
+  !*** ./src/transforms.ts ***!
+  \***************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.toAlfredFilterItem = exports.toAlfredFilterList = exports.toAlfredFilterListItems = exports.toFlatAlfredFilterListItems = void 0;\nconst linkResolution_1 = __webpack_require__(/*! ./linkResolution */ \"./src/linkResolution.ts\");\nasync function toFlatAlfredFilterListItems(links) {\n    const result = [];\n    async function addLinks(accumulator, node, groupName) {\n        async function flattenGroup(group) {\n            const newGroupName = [groupName, group.name]\n                .filter((i) => i !== undefined && i?.length)\n                .join(\"/\");\n            await Promise.all(group.items.map((item) => addLinks(accumulator, item, newGroupName)));\n        }\n        if (node.type === \"group\") {\n            await flattenGroup(node);\n        }\n        else if (node.type === \"link\") {\n            accumulator.push(toAlfredFilterItem({ ...node, groupName }));\n        }\n        else if (node.type === \"groupRef\") {\n            const resolvedGroup = await (0, linkResolution_1.resolveLinkGroupRef)(node);\n            resolvedGroup && (await flattenGroup(resolvedGroup));\n        }\n    }\n    await addLinks(result, links);\n    return result;\n}\nexports.toFlatAlfredFilterListItems = toFlatAlfredFilterListItems;\nasync function toAlfredFilterListItems(group) {\n    const items = await Promise.all(group.items.map(async (item) => {\n        if (item.type === \"group\") {\n            return groupToListItem(item);\n        }\n        else if (item.type === \"link\") {\n            return toAlfredFilterItem({ ...item, groupName: group.name });\n        }\n        else if (item.type === \"groupRef\") {\n            const resolvedGroup = await (0, linkResolution_1.resolveLinkGroupRef)(item);\n            return resolvedGroup ? groupToListItem(resolvedGroup) : undefined;\n        }\n    }));\n    return items.filter((item) => item !== undefined);\n}\nexports.toAlfredFilterListItems = toAlfredFilterListItems;\nfunction groupToListItem(gp) {\n    return {\n        uid: Date.now().toString(),\n        title: gp.name,\n        arg: \"group\",\n        variables: {\n            MILINKS_GROUP: JSON.stringify(gp),\n        },\n    };\n}\nfunction toAlfredFilterList(items) {\n    return { items };\n}\nexports.toAlfredFilterList = toAlfredFilterList;\nfunction toAlfredFilterItem(link) {\n    const subtitle = [link.groupName, link.description, link.url]\n        .filter((item) => item !== undefined && item?.length)\n        .join(\" | \");\n    return {\n        uid: link.title,\n        title: link.title,\n        subtitle,\n        arg: link.url,\n        variables: {\n            url: link.url,\n        },\n    };\n}\nexports.toAlfredFilterItem = toAlfredFilterItem;\n\n\n//# sourceURL=webpack://open-link-alfred/./src/transforms.ts?");
 
 /***/ }),
 
@@ -289,36 +344,14 @@ module.exports = require("https");
 
 /***/ }),
 
-/***/ "node:fs":
-/*!**************************!*\
-  !*** external "node:fs" ***!
-  \**************************/
+/***/ "os":
+/*!*********************!*\
+  !*** external "os" ***!
+  \*********************/
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("node:fs");
-
-/***/ }),
-
-/***/ "node:os":
-/*!**************************!*\
-  !*** external "node:os" ***!
-  \**************************/
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("node:os");
-
-/***/ }),
-
-/***/ "node:path":
-/*!****************************!*\
-  !*** external "node:path" ***!
-  \****************************/
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("node:path");
+module.exports = require("os");
 
 /***/ }),
 
@@ -458,7 +491,7 @@ eval("module.exports = JSON.parse('{\"application/1d-interleaved-parityfec\":{\"
 /******/ 	
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	// This entry module is referenced by other modules so it can't be inlined
+/******/ 	// This entry module can't be inlined because the eval devtool is used.
 /******/ 	var __webpack_exports__ = __webpack_require__("./src/index.ts");
 /******/ 	
 /******/ })()
