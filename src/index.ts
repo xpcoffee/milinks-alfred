@@ -9,9 +9,16 @@ import {
 
 /**
  * TODO
- *  - resolve group refs for search-all
  *  - add README
- *  - extract bits that can be pulled into nodejs library
+ *  - add ability to bootstrap root file if not found
+ *  - add ability to add a link
+ *  - add ability to delete a link
+ *  - add ability to modify a link
+ *  - add ability to add a group
+ *  - add ability to delete a group
+ *  - add ability to rename a group
+ *  - add ability to add a group ref
+ *  - add ability to add alias a group ref
  */
 
 /**
