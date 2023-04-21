@@ -37,6 +37,18 @@
 			</dict>
 			<dict>
 				<key>destinationuid</key>
+				<string>5AF2B4E2-2FC1-46C4-81B8-97B6CA270CB3</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>sourceoutputuid</key>
+				<string>0802EC46-EB4F-461B-98AD-656EFB5059B9</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
 				<string>1084EBE9-1F9A-4A90-A5C8-03EE84DCD3A2</string>
 				<key>modifiers</key>
 				<integer>0</integer>
@@ -83,6 +95,16 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>8D66F671-23AA-487F-9877-935262D33E4F</string>
+				<key>modifiers</key>
+				<integer>1048576</integer>
+				<key>modifiersubtext</key>
+				<string>Add folder or link</string>
 				<key>vitoclose</key>
 				<false/>
 			</dict>
@@ -183,7 +205,7 @@
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
-				<string>./milinks.js</string>
+				<string>./navigateLinksScriptFilter.js</string>
 				<key>subtext</key>
 				<string></string>
 				<key>title</key>
@@ -203,21 +225,21 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>browser</key>
-				<string></string>
-				<key>skipqueryencode</key>
+				<key>lastpathcomponent</key>
 				<false/>
-				<key>skipvarencode</key>
+				<key>onlyshowifquerypopulated</key>
 				<false/>
-				<key>spaces</key>
-				<string></string>
-				<key>url</key>
-				<string>{var:url}</string>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
+				<string>Nope.</string>
+				<key>title</key>
+				<string>Not yet implemented</string>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.action.openurl</string>
+			<string>alfred.workflow.output.notification</string>
 			<key>uid</key>
-			<string>1084EBE9-1F9A-4A90-A5C8-03EE84DCD3A2</string>
+			<string>5AF2B4E2-2FC1-46C4-81B8-97B6CA270CB3</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
@@ -239,6 +261,20 @@
 						<string>recurse</string>
 						<key>uid</key>
 						<string>BBDB1E39-A697-4C03-B549-E29E69A63A11</string>
+					</dict>
+					<dict>
+						<key>inputstring</key>
+						<string>{query}</string>
+						<key>matchcasesensitive</key>
+						<false/>
+						<key>matchmode</key>
+						<integer>0</integer>
+						<key>matchstring</key>
+						<string>remove</string>
+						<key>outputlabel</key>
+						<string>remove</string>
+						<key>uid</key>
+						<string>0802EC46-EB4F-461B-98AD-656EFB5059B9</string>
 					</dict>
 					<dict>
 						<key>inputstring</key>
@@ -289,6 +325,48 @@
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>browser</key>
+				<string></string>
+				<key>skipqueryencode</key>
+				<false/>
+				<key>skipvarencode</key>
+				<false/>
+				<key>spaces</key>
+				<string></string>
+				<key>url</key>
+				<string>{var:url}</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.openurl</string>
+			<key>uid</key>
+			<string>1084EBE9-1F9A-4A90-A5C8-03EE84DCD3A2</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<false/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
+				<string>Nope.</string>
+				<key>title</key>
+				<string>Not yet implemented</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>8D66F671-23AA-487F-9877-935262D33E4F</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Navigate and interact with MiLinks data.</string>
@@ -299,14 +377,14 @@
 			<key>xpos</key>
 			<real>735</real>
 			<key>ypos</key>
-			<real>260</real>
+			<real>415</real>
 		</dict>
 		<key>370F1CB5-864C-4EDA-9F4F-78F1584A64C2</key>
 		<dict>
 			<key>xpos</key>
-			<real>315</real>
+			<real>265</real>
 			<key>ypos</key>
-			<real>275</real>
+			<real>290</real>
 		</dict>
 		<key>3D7FA5F4-9F61-475B-A706-72A86291C5C0</key>
 		<dict>
@@ -318,30 +396,44 @@
 		<key>3F662F2C-36AF-4E8B-97D0-9DAC12401265</key>
 		<dict>
 			<key>xpos</key>
-			<real>405</real>
+			<real>355</real>
 			<key>ypos</key>
-			<real>245</real>
+			<real>260</real>
+		</dict>
+		<key>5AF2B4E2-2FC1-46C4-81B8-97B6CA270CB3</key>
+		<dict>
+			<key>xpos</key>
+			<real>745</real>
+			<key>ypos</key>
+			<real>260</real>
 		</dict>
 		<key>83B15899-D440-41E3-B386-FCF0C248DFA3</key>
 		<dict>
 			<key>xpos</key>
-			<real>115</real>
+			<real>65</real>
 			<key>ypos</key>
-			<real>85</real>
+			<real>100</real>
+		</dict>
+		<key>8D66F671-23AA-487F-9877-935262D33E4F</key>
+		<dict>
+			<key>xpos</key>
+			<real>310</real>
+			<key>ypos</key>
+			<real>445</real>
 		</dict>
 		<key>A2AEFA74-584E-4B7C-9BAA-5FFE9FF55B4F</key>
 		<dict>
 			<key>xpos</key>
 			<real>735</real>
 			<key>ypos</key>
-			<real>85</real>
+			<real>95</real>
 		</dict>
 		<key>B5A4AB56-CDB9-4218-8235-0CCB1B98651F</key>
 		<dict>
 			<key>xpos</key>
-			<real>115</real>
+			<real>65</real>
 			<key>ypos</key>
-			<real>245</real>
+			<real>260</real>
 		</dict>
 	</dict>
 	<key>userconfigurationconfig</key>

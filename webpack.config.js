@@ -2,7 +2,9 @@ const path = require('path');
 
 module.exports = {
   mode: "development",
-  entry: './src/index.ts',
+  entry: {
+    navigate: './src/navigateLinksScriptFilter.ts'
+  },
   target: "node",
   module: {
     rules: [
@@ -17,7 +19,7 @@ module.exports = {
     extensions: ['.tsx', '.ts', '.js'],
   },
   output: {
-    filename: 'script.js',
+    filename: '[name].js',
     path: path.resolve(__dirname, 'alfred-workflow'),
   },
 };

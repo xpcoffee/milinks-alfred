@@ -256,17 +256,6 @@ eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {
 
 /***/ }),
 
-/***/ "./src/index.ts":
-/*!**********************!*\
-  !*** ./src/index.ts ***!
-  \**********************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nconst dataFile_1 = __webpack_require__(/*! ./dataFile */ \"./src/dataFile.ts\");\nconst dataParsing_1 = __webpack_require__(/*! ./dataParsing */ \"./src/dataParsing.ts\");\nconst filtering_1 = __webpack_require__(/*! ./filtering */ \"./src/filtering.ts\");\nconst transforms_1 = __webpack_require__(/*! ./transforms */ \"./src/transforms.ts\");\n/**\n * TODO\n *  - resolve group refs for search-all\n *  - add README\n *  - extract bits that can be pulled into nodejs library\n */\n/**\n * Alfred script filter\n *\n * Environment variables\n *    MILINKS_FILE_PATH: a string. the location of the top-level MiLinks group\n *    MILINKS_SEARCH_ALL: a boolean integer; 0 or 1. if set to 1, search behaviour will search all tags at the same time\n *    MILINKS_GROUP: a JSON string. if set, will be used as the top-level group instead of the contents of MILINKS_FILE_PATH.\n */\n(async function browseLinks() {\n    const searchAllLinks = process.env[\"MILINKS_SEARCH_ALL\"]?.toLowerCase() === \"1\";\n    const linksFilePath = process.env[\"MILINKS_FILE_PATH\"];\n    const groupString = process.env[\"MILINKS_GROUP\"];\n    const [_script, _preamble, query] = process.argv;\n    const nestedLinks = groupString\n        ? (0, dataParsing_1.parseDataString)(groupString)\n        : (0, dataFile_1.parseLinkFile)(linksFilePath);\n    console.error(`search all ${process.env[\"MILINKS_SEARCH_ALL\"]}`);\n    const getSearchItems = searchAllLinks\n        ? transforms_1.toFlatAlfredFilterListItems\n        : transforms_1.toAlfredFilterListItems;\n    const items = await getSearchItems(nestedLinks);\n    const filteredItems = (0, filtering_1.fuzzyFindFilterListItems)(items, query);\n    console.log(JSON.stringify((0, transforms_1.toAlfredFilterList)(filteredItems)));\n})();\n\n\n//# sourceURL=webpack://open-link-alfred/./src/index.ts?");
-
-/***/ }),
-
 /***/ "./src/linkResolution.ts":
 /*!*******************************!*\
   !*** ./src/linkResolution.ts ***!
@@ -275,6 +264,17 @@ eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\ncons
 
 "use strict";
 eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.resolveLinkGroupRef = void 0;\nconst axios_1 = __importDefault(__webpack_require__(/*! axios */ \"./node_modules/axios/dist/node/axios.cjs\"));\nconst dataFile_1 = __webpack_require__(/*! ./dataFile */ \"./src/dataFile.ts\");\n/**\n * TODO - validate the schema\n */\nasync function resolveLinkGroupRef({ url, alias, }) {\n    const fileUrlPrefix = \"file://\";\n    if (url.startsWith(fileUrlPrefix)) {\n        const filePath = url.slice(fileUrlPrefix.length);\n        return (0, dataFile_1.parseLinkFile)(filePath);\n    }\n    else {\n        const response = await (0, axios_1.default)(url);\n        const jsonResult = response.data;\n        if (alias) {\n            jsonResult[\"name\"] = alias;\n        }\n        return jsonResult;\n    }\n}\nexports.resolveLinkGroupRef = resolveLinkGroupRef;\n\n\n//# sourceURL=webpack://open-link-alfred/./src/linkResolution.ts?");
+
+/***/ }),
+
+/***/ "./src/navigateLinksScriptFilter.ts":
+/*!******************************************!*\
+  !*** ./src/navigateLinksScriptFilter.ts ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nconst dataFile_1 = __webpack_require__(/*! ./dataFile */ \"./src/dataFile.ts\");\nconst dataParsing_1 = __webpack_require__(/*! ./dataParsing */ \"./src/dataParsing.ts\");\nconst filtering_1 = __webpack_require__(/*! ./filtering */ \"./src/filtering.ts\");\nconst transforms_1 = __webpack_require__(/*! ./transforms */ \"./src/transforms.ts\");\n/**\n * TODO\n *  - add README\n *  - add ability to bootstrap root file if not found\n *  - add ability to add a link\n *  - add ability to delete a link\n *  - add ability to modify a link\n *  - add ability to add a group\n *  - add ability to delete a group\n *  - add ability to rename a group\n *  - add ability to add a group ref\n *  - add ability to add alias a group ref\n */\n/**\n * Alfred script filter\n *\n * Environment variables\n *    MILINKS_FILE_PATH: a string. the location of the top-level MiLinks group\n *    MILINKS_SEARCH_ALL: a boolean integer; 0 or 1. if set to 1, search behaviour will search all tags at the same time\n *    MILINKS_GROUP: a JSON string. if set, will be used as the top-level group instead of the contents of MILINKS_FILE_PATH.\n */\n(async function browseLinks() {\n    const searchAllLinks = process.env[\"MILINKS_SEARCH_ALL\"]?.toLowerCase() === \"1\";\n    const linksFilePath = process.env[\"MILINKS_FILE_PATH\"];\n    const groupString = process.env[\"MILINKS_GROUP\"];\n    const [_script, _preamble, query] = process.argv;\n    const nestedLinks = groupString\n        ? (0, dataParsing_1.parseDataString)(groupString)\n        : (0, dataFile_1.parseLinkFile)(linksFilePath);\n    console.error(`search all ${process.env[\"MILINKS_SEARCH_ALL\"]}`);\n    const getSearchItems = searchAllLinks\n        ? transforms_1.toFlatAlfredFilterListItems\n        : transforms_1.toAlfredFilterListItems;\n    const items = await getSearchItems(nestedLinks);\n    const filteredItems = (0, filtering_1.fuzzyFindFilterListItems)(items, query);\n    console.log(JSON.stringify((0, transforms_1.toAlfredFilterList)(filteredItems)));\n})();\n\n\n//# sourceURL=webpack://open-link-alfred/./src/navigateLinksScriptFilter.ts?");
 
 /***/ }),
 
@@ -492,7 +492,7 @@ eval("module.exports = JSON.parse('{\"application/1d-interleaved-parityfec\":{\"
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module can't be inlined because the eval devtool is used.
-/******/ 	var __webpack_exports__ = __webpack_require__("./src/index.ts");
+/******/ 	var __webpack_exports__ = __webpack_require__("./src/navigateLinksScriptFilter.ts");
 /******/ 	
 /******/ })()
 ;
