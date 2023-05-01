@@ -14,6 +14,7 @@ export type FilterListItem = {
 
 type Choice = {
   arg: string;
+  valid?: boolean;
   subtitle?: string;
   variables?: Record<string, string>;
 };

@@ -209,28 +209,6 @@ eval("// populates missing values\nmodule.exports = function(dst, src) {\n\n  Ob
 
 /***/ }),
 
-/***/ "./node_modules/fuzzy-search/src/FuzzySearch.js":
-/*!******************************************************!*\
-  !*** ./node_modules/fuzzy-search/src/FuzzySearch.js ***!
-  \******************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ FuzzySearch)\n/* harmony export */ });\n/* harmony import */ var _Helper__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Helper */ \"./node_modules/fuzzy-search/src/Helper.js\");\n\n\nclass FuzzySearch {\n  constructor(haystack = [], keys = [], options = {}) {\n    if (! Array.isArray(keys)) {\n      options = keys;\n      keys = [];\n    }\n\n    this.haystack = haystack;\n    this.keys = keys;\n    this.options = Object.assign({\n      caseSensitive: false,\n      sort: false,\n    }, options);\n  }\n\n  search(query = '') {\n    if (query === '') {\n      return this.haystack;\n    }\n\n    const results = [];\n\n    for (let i = 0; i < this.haystack.length; i++) {\n      const item = this.haystack[i];\n\n      if (this.keys.length === 0) {\n        const score = FuzzySearch.isMatch(item, query, this.options.caseSensitive);\n\n        if (score) {\n          results.push({ item, score });\n        }\n      } else {\n        for (let y = 0; y < this.keys.length; y++) {\n          const propertyValues = _Helper__WEBPACK_IMPORTED_MODULE_0__[\"default\"].getDescendantProperty(item, this.keys[y]);\n\n          let found = false;\n\n          for (let z = 0; z < propertyValues.length; z++) {\n            const score = FuzzySearch.isMatch(propertyValues[z], query, this.options.caseSensitive);\n\n            if (score) {\n              found = true;\n\n              results.push({ item, score });\n\n              break;\n            }\n          }\n\n          if (found) {\n            break;\n          }\n        }\n      }\n    }\n\n    if (this.options.sort) {\n      results.sort((a, b) => a.score - b.score);\n    }\n\n    return results.map(result => result.item);\n  }\n\n  static isMatch(item, query, caseSensitive) {\n    item = String(item);\n    query = String(query);\n\n    if (! caseSensitive) {\n      item = item.toLocaleLowerCase();\n      query = query.toLocaleLowerCase();\n    }\n\n    const indexes = FuzzySearch.nearestIndexesFor(item, query);\n\n    if (! indexes) {\n      return false;\n    }\n\n    // Exact matches should be first.\n    if (item === query) {\n      return 1;\n    }\n\n    // If we have more than 2 letters, matches close to each other should be first.\n    if (indexes.length > 1) {\n      return 2 + (indexes[indexes.length - 1] - indexes[0]);\n    }\n\n    // Matches closest to the start of the string should be first.\n    return 2 + indexes[0];\n  }\n\n  static nearestIndexesFor(item, query) {\n    const letters = query.split('');\n    let indexes = [];\n\n    const indexesOfFirstLetter = FuzzySearch.indexesOfFirstLetter(item, query);\n\n    indexesOfFirstLetter.forEach((startingIndex, loopingIndex) => {\n      let index = startingIndex + 1;\n\n      indexes[loopingIndex] = [startingIndex];\n\n      for (let i = 1; i < letters.length; i++) {\n        const letter = letters[i];\n\n        index = item.indexOf(letter, index);\n\n        if (index === -1) {\n          indexes[loopingIndex] = false;\n\n          break;\n        }\n\n        indexes[loopingIndex].push(index);\n\n        index++;\n      }\n    });\n\n    indexes = indexes.filter(letterIndexes => letterIndexes !== false);\n\n    if (! indexes.length) {\n      return false;\n    }\n\n    return indexes.sort((a, b) => {\n      if (a.length === 1) {\n        return a[0] - b[0];\n      }\n\n      a = a[a.length - 1] - a[0];\n      b = b[b.length - 1] - b[0];\n\n      return a - b;\n    })[0];\n  }\n\n  static indexesOfFirstLetter(item, query) {\n    const match = query[0];\n\n    return item.split('').map((letter, index) => {\n      if (letter !== match) {\n        return false;\n      }\n\n      return index;\n    }).filter(index => index !== false);\n  }\n}\n\n\n//# sourceURL=webpack://open-link-alfred/./node_modules/fuzzy-search/src/FuzzySearch.js?");
-
-/***/ }),
-
-/***/ "./node_modules/fuzzy-search/src/Helper.js":
-/*!*************************************************!*\
-  !*** ./node_modules/fuzzy-search/src/Helper.js ***!
-  \*************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ Helper)\n/* harmony export */ });\nclass Helper {\n  static getDescendantProperty(object, path, list = []) {\n    let firstSegment;\n    let remaining;\n    let dotIndex;\n    let value;\n    let index;\n    let length;\n\n    if (path) {\n      dotIndex = path.indexOf('.');\n\n      if (dotIndex === -1) {\n        firstSegment = path;\n      } else {\n        firstSegment = path.slice(0, dotIndex);\n        remaining = path.slice(dotIndex + 1);\n      }\n\n      value = object[firstSegment];\n      if (value !== null && typeof value !== 'undefined') {\n        if (! remaining && (typeof value === 'string' || typeof value === 'number')) {\n          list.push(value);\n        } else if (Object.prototype.toString.call(value) === '[object Array]') {\n          for (index = 0, length = value.length; index < length; index++) {\n            Helper.getDescendantProperty(value[index], remaining, list);\n          }\n        } else if (remaining) {\n          Helper.getDescendantProperty(value, remaining, list);\n        }\n      }\n    } else {\n      list.push(object);\n    }\n\n    return list;\n  }\n}\n\n\n//# sourceURL=webpack://open-link-alfred/./node_modules/fuzzy-search/src/Helper.js?");
-
-/***/ }),
-
 /***/ "./node_modules/has-flag/index.js":
 /*!****************************************!*\
   !*** ./node_modules/has-flag/index.js ***!
@@ -295,6 +273,17 @@ eval("\nconst os = __webpack_require__(/*! os */ \"os\");\nconst tty = __webpack
 
 /***/ }),
 
+/***/ "./src/actionScriptFilter.ts":
+/*!***********************************!*\
+  !*** ./src/actionScriptFilter.ts ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nconst transforms_1 = __webpack_require__(/*! ./transforms */ \"./src/transforms.ts\");\n/**\n * Alfred script filter\n *\n * Environment variables\n *    MILINKS_FILE_PATH: a string. the location of the top-level MiLinks group\n *    MILINKS_SEARCH_ALL: a boolean integer; 0 or 1. if set to 1, search behaviour will search all tags at the same time\n *    MILINKS_GROUP: a JSON string. if set, will be used as the top-level group instead of the contents of MILINKS_FILE_PATH.\n */\n(async function addLinkOrGroup() {\n    const [_script, _preamble, query] = process.argv;\n    console.log(JSON.stringify((0, transforms_1.toAlfredFilterList)(getActionFilterItems(query))));\n})();\nfunction getActionFilterItems(query) {\n    const [title, url] = query?.split(\" \") ?? [undefined, undefined];\n    function getLinkSubtitle() {\n        const name = (title && `[link name: ${title}]`) || \"[link name]\";\n        const link = (url && `[link name: ${url}]`) || \"[link url]\";\n        return `${name} ${link}`;\n    }\n    function getLinkVariables() {\n        const variables = {};\n        if (title) {\n            variables[\"linkAlias\"] = title;\n        }\n        if (url) {\n            variables[\"linkUrl\"] = url;\n        }\n        return variables;\n    }\n    function getGroupSubtitle() {\n        return (title && `[group name: ${title}]`) || \"[group name]\";\n    }\n    function getGroupVariables() {\n        const variables = {};\n        if (title) {\n            variables[\"groupAlias\"] = title;\n        }\n        return variables;\n    }\n    return [\n        {\n            uid: \"addLink\",\n            title: \"Add link\",\n            arg: \"addLink\",\n            valid: !!query,\n            subtitle: getLinkSubtitle(),\n            variables: getLinkVariables()\n        },\n        {\n            uid: \"createGroup\",\n            title: \"Create link group\",\n            arg: \"createGroup\",\n            valid: !!query,\n            subtitle: getGroupSubtitle(),\n            variables: getGroupVariables()\n        }\n    ];\n}\n\n\n//# sourceURL=webpack://open-link-alfred/./src/actionScriptFilter.ts?");
+
+/***/ }),
+
 /***/ "./src/dataFile.ts":
 /*!*************************!*\
   !*** ./src/dataFile.ts ***!
@@ -317,17 +306,6 @@ eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexpo
 
 /***/ }),
 
-/***/ "./src/filtering.ts":
-/*!**************************!*\
-  !*** ./src/filtering.ts ***!
-  \**************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.fuzzyFindFilterListItems = void 0;\nconst fuzzy_search_1 = __importDefault(__webpack_require__(/*! fuzzy-search */ \"./node_modules/fuzzy-search/src/FuzzySearch.js\"));\nfunction fuzzyFindFilterListItems(filterListItems, query) {\n    if (!query) {\n        return filterListItems;\n    }\n    const terms = query.split(\" \");\n    let filteredItems = filterListItems;\n    terms.forEach((term) => {\n        filteredItems = new fuzzy_search_1.default(filteredItems, [\"title\"]).search(term);\n    });\n    return filteredItems;\n}\nexports.fuzzyFindFilterListItems = fuzzyFindFilterListItems;\n\n\n//# sourceURL=webpack://open-link-alfred/./src/filtering.ts?");
-
-/***/ }),
-
 /***/ "./src/linkResolution.ts":
 /*!*******************************!*\
   !*** ./src/linkResolution.ts ***!
@@ -336,17 +314,6 @@ eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {
 
 "use strict";
 eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.resolveLinkGroupRef = void 0;\nconst axios_1 = __importDefault(__webpack_require__(/*! axios */ \"./node_modules/axios/dist/node/axios.cjs\"));\nconst dataFile_1 = __webpack_require__(/*! ./dataFile */ \"./src/dataFile.ts\");\n/**\n * TODO - validate the schema\n */\nasync function resolveLinkGroupRef({ url, alias, }) {\n    const fileUrlPrefix = \"file://\";\n    if (url.startsWith(fileUrlPrefix)) {\n        const filePath = url.slice(fileUrlPrefix.length);\n        return (0, dataFile_1.parseLinkFile)(filePath);\n    }\n    else {\n        const response = await (0, axios_1.default)(url);\n        const jsonResult = response.data;\n        if (alias) {\n            jsonResult[\"name\"] = alias;\n        }\n        return jsonResult;\n    }\n}\nexports.resolveLinkGroupRef = resolveLinkGroupRef;\n\n\n//# sourceURL=webpack://open-link-alfred/./src/linkResolution.ts?");
-
-/***/ }),
-
-/***/ "./src/navigateLinksScriptFilter.ts":
-/*!******************************************!*\
-  !*** ./src/navigateLinksScriptFilter.ts ***!
-  \******************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nconst dataFile_1 = __webpack_require__(/*! ./dataFile */ \"./src/dataFile.ts\");\nconst dataParsing_1 = __webpack_require__(/*! ./dataParsing */ \"./src/dataParsing.ts\");\nconst filtering_1 = __webpack_require__(/*! ./filtering */ \"./src/filtering.ts\");\nconst transforms_1 = __webpack_require__(/*! ./transforms */ \"./src/transforms.ts\");\n/**\n * TODO\n *  - add README\n *  - add ability to bootstrap root file if not found\n *  - add ability to add a link\n *  - add ability to delete a link\n *  - add ability to modify a link\n *  - add ability to add a group\n *  - add ability to delete a group\n *  - add ability to rename a group\n *  - add ability to add a group ref\n *  - add ability to add alias a group ref\n */\n/**\n * Alfred script filter\n *\n * Environment variables\n *    MILINKS_FILE_PATH: a string. the location of the top-level MiLinks group\n *    MILINKS_SEARCH_ALL: a boolean integer; 0 or 1. if set to 1, search behaviour will search all tags at the same time\n *    MILINKS_GROUP: a JSON string. if set, will be used as the top-level group instead of the contents of MILINKS_FILE_PATH.\n */\n(async function browseLinks() {\n    const searchAllLinks = process.env[\"MILINKS_SEARCH_ALL\"]?.toLowerCase() === \"1\";\n    const linksFilePath = process.env[\"MILINKS_FILE_PATH\"];\n    const groupString = process.env[\"MILINKS_GROUP\"];\n    const [_script, _preamble, query] = process.argv;\n    const nestedLinks = groupString\n        ? (0, dataParsing_1.parseDataString)(groupString)\n        : (0, dataFile_1.parseLinkFile)(linksFilePath);\n    console.error(`search all ${process.env[\"MILINKS_SEARCH_ALL\"]}`);\n    const getSearchItems = searchAllLinks\n        ? transforms_1.toFlatAlfredFilterListItems\n        : transforms_1.toAlfredFilterListItems;\n    const items = await getSearchItems(nestedLinks);\n    const filteredItems = (0, filtering_1.fuzzyFindFilterListItems)(items, query);\n    console.log(JSON.stringify((0, transforms_1.toAlfredFilterList)(filteredItems)));\n})();\n\n\n//# sourceURL=webpack://open-link-alfred/./src/navigateLinksScriptFilter.ts?");
 
 /***/ }),
 
@@ -542,40 +509,11 @@ eval("module.exports = JSON.parse('{\"application/1d-interleaved-parityfec\":{\"
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/************************************************************************/
 /******/ 	
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module can't be inlined because the eval devtool is used.
-/******/ 	var __webpack_exports__ = __webpack_require__("./src/navigateLinksScriptFilter.ts");
+/******/ 	var __webpack_exports__ = __webpack_require__("./src/actionScriptFilter.ts");
 /******/ 	
 /******/ })()
 ;

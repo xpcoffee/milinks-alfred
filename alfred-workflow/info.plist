@@ -8,6 +8,19 @@
 	<string>Productivity</string>
 	<key>connections</key>
 	<dict>
+		<key>0E74DEDA-0A1C-4376-BBBF-FBE7CFC9C3D0</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6FDE3CA2-B1EF-4583-BC98-8A628C90D3AF</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>370F1CB5-864C-4EDA-9F4F-78F1584A64C2</key>
 		<array>
 			<dict>
@@ -100,13 +113,13 @@
 			</dict>
 			<dict>
 				<key>destinationuid</key>
-				<string>8D66F671-23AA-487F-9877-935262D33E4F</string>
+				<string>FE5EAA30-5AF8-4F40-BD1B-A0CDE956F49F</string>
 				<key>modifiers</key>
 				<integer>1048576</integer>
 				<key>modifiersubtext</key>
-				<string>Add folder or link</string>
+				<string>Make changes to MiLinks</string>
 				<key>vitoclose</key>
-				<false/>
+				<true/>
 			</dict>
 		</array>
 	</dict>
@@ -123,6 +136,21 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>availableviaurlhandler</key>
+				<true/>
+				<key>triggerid</key>
+				<string>milinks</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>83B15899-D440-41E3-B386-FCF0C248DFA3</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>externaltriggerid</key>
 				<string>milinks</string>
 				<key>passinputasargument</key>
@@ -136,21 +164,6 @@
 			<string>alfred.workflow.output.callexternaltrigger</string>
 			<key>uid</key>
 			<string>A2AEFA74-584E-4B7C-9BAA-5FFE9FF55B4F</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>availableviaurlhandler</key>
-				<true/>
-				<key>triggerid</key>
-				<string>milinks</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.trigger.external</string>
-			<key>uid</key>
-			<string>83B15899-D440-41E3-B386-FCF0C248DFA3</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
@@ -205,7 +218,7 @@
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
-				<string>./navigateLinksScriptFilter.js</string>
+				<string>./navigate.js</string>
 				<key>subtext</key>
 				<string></string>
 				<key>title</key>
@@ -349,6 +362,21 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>openwith</key>
+				<string></string>
+				<key>sourcefile</key>
+				<string>index.html</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.openfile</string>
+			<key>uid</key>
+			<string>FE5EAA30-5AF8-4F40-BD1B-A0CDE956F49F</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>lastpathcomponent</key>
 				<false/>
 				<key>onlyshowifquerypopulated</key>
@@ -356,14 +384,29 @@
 				<key>removeextension</key>
 				<false/>
 				<key>text</key>
-				<string>Nope.</string>
+				<string>world</string>
 				<key>title</key>
-				<string>Not yet implemented</string>
+				<string>hello</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.output.notification</string>
 			<key>uid</key>
-			<string>8D66F671-23AA-487F-9877-935262D33E4F</string>
+			<string>6FDE3CA2-B1EF-4583-BC98-8A628C90D3AF</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>availableviaurlhandler</key>
+				<true/>
+				<key>triggerid</key>
+				<string>test</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>0E74DEDA-0A1C-4376-BBBF-FBE7CFC9C3D0</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
@@ -372,12 +415,19 @@
 	<string>Navigate and interact with MiLinks data.</string>
 	<key>uidata</key>
 	<dict>
+		<key>0E74DEDA-0A1C-4376-BBBF-FBE7CFC9C3D0</key>
+		<dict>
+			<key>xpos</key>
+			<real>155</real>
+			<key>ypos</key>
+			<real>595</real>
+		</dict>
 		<key>1084EBE9-1F9A-4A90-A5C8-03EE84DCD3A2</key>
 		<dict>
 			<key>xpos</key>
-			<real>735</real>
+			<real>815</real>
 			<key>ypos</key>
-			<real>415</real>
+			<real>395</real>
 		</dict>
 		<key>370F1CB5-864C-4EDA-9F4F-78F1584A64C2</key>
 		<dict>
@@ -389,7 +439,7 @@
 		<key>3D7FA5F4-9F61-475B-A706-72A86291C5C0</key>
 		<dict>
 			<key>xpos</key>
-			<real>585</real>
+			<real>655</real>
 			<key>ypos</key>
 			<real>265</real>
 		</dict>
@@ -403,9 +453,16 @@
 		<key>5AF2B4E2-2FC1-46C4-81B8-97B6CA270CB3</key>
 		<dict>
 			<key>xpos</key>
-			<real>745</real>
+			<real>815</real>
 			<key>ypos</key>
 			<real>260</real>
+		</dict>
+		<key>6FDE3CA2-B1EF-4583-BC98-8A628C90D3AF</key>
+		<dict>
+			<key>xpos</key>
+			<real>395</real>
+			<key>ypos</key>
+			<real>590</real>
 		</dict>
 		<key>83B15899-D440-41E3-B386-FCF0C248DFA3</key>
 		<dict>
@@ -414,19 +471,12 @@
 			<key>ypos</key>
 			<real>100</real>
 		</dict>
-		<key>8D66F671-23AA-487F-9877-935262D33E4F</key>
-		<dict>
-			<key>xpos</key>
-			<real>310</real>
-			<key>ypos</key>
-			<real>445</real>
-		</dict>
 		<key>A2AEFA74-584E-4B7C-9BAA-5FFE9FF55B4F</key>
 		<dict>
 			<key>xpos</key>
-			<real>735</real>
+			<real>815</real>
 			<key>ypos</key>
-			<real>95</real>
+			<real>125</real>
 		</dict>
 		<key>B5A4AB56-CDB9-4218-8235-0CCB1B98651F</key>
 		<dict>
@@ -434,6 +484,13 @@
 			<real>65</real>
 			<key>ypos</key>
 			<real>260</real>
+		</dict>
+		<key>FE5EAA30-5AF8-4F40-BD1B-A0CDE956F49F</key>
+		<dict>
+			<key>xpos</key>
+			<real>365</real>
+			<key>ypos</key>
+			<real>450</real>
 		</dict>
 	</dict>
 	<key>userconfigurationconfig</key>
